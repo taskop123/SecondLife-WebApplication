@@ -1,0 +1,32 @@
+﻿@model SecondLife.Domain.DTO.AddUserToRoleDTO
+
+@{
+    ViewData["Title"] = "AddUserToRole";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <h1>Add user to role</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <form asp-action="AddUserToRole" method="post">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SelectedUserId)
+                    @Html.DropDownListFor(m => m.SelectedUserId, new SelectList(Model.UserEmails, "Id", "Email"), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SelectedRole)
+                    @Html.DropDownListFor(m => m.SelectedRole, new SelectList(Model.Roles), new { @class = "form-control" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

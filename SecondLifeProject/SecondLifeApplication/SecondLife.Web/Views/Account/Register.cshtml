@@ -1,0 +1,116 @@
+﻿@model SecondLife.Domain.DTO.UserRegisterDTO
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid h-100 d-flex align-items-center mt-5">
+    <form asp-action="Register" asp-controller="Account" method="post" enctype="multipart/form-data">
+        <div class="container">
+            <div class="row w-75 mx-auto">
+                <div class="col-6">
+                    @Html.TextBoxFor(m => m.Name, new { placeholder = "First Name", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-6">
+                    @Html.TextBoxFor(m => m.Surname, new { placeholder = "Last Name", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Surname, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mx-auto mt-2">
+                <div class="col-6">
+                    @Html.TextBoxFor(m => m.City, new { placeholder = "City", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.City, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-6">
+                    @Html.TextBoxFor(m => m.Country, new { placeholder = "Country", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Country, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <div class="col">
+                    @Html.TextBoxFor(m => m.Address, new { placeholder = "Address", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Address, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <div class="col-12">
+                    @Html.TextBoxFor(m => m.PhoneNumber, new { placeholder = "Phone Number (XXX-YYY-ZZZ)", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <div class="col-12">
+                    <input asp-for="Age" placeholder="Age" value="" class="form-control" />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <div class="col">
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input asp-for="ProfilePicture" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Upload your profile picture</label>
+                        </div>
+                        <span asp-validation-for="ProfilePicture" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row w-75 mx-auto">
+                <div class="col-12">
+                    @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <div class="col-6">
+                    @Html.PasswordFor(m => m.Password, new { placeholder = "Password", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-6">
+                    @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "Repeat Password", @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row w-75 mt-5 mx-auto">
+                <div class="col-2">
+                    I Agree  <input type="checkbox">
+                </div>
+                <div class="col-9">
+                    <p>By clicking <span class="bg-primary btn-dark d-inline-block px-1 rounded" style="font-weight: 500;">Register</span>, you agree to the <a href="#">Terms and conditions</a> set out by this site, including our Cookie Use.</p>
+                </div>
+            </div>
+            <div class="row w-75 mt-2 mx-auto">
+                <span style="background-color: green; width: 12.5%; height: 5px;"></span>
+                <span style="background-color: lightgreen;width: 12.5%;"></span>
+                <span style="background-color: orange;width: 12.5%"></span>
+                <span style="background-color: red;width: 12.5%"></span>
+                <span style="background-color: violet;width: 12.5%"></span>
+                <span style="background-color: pink;width: 12.5%"></span>
+                <span style="background-color: dodgerblue;width: 12.5%"></span>
+                <span style="background-color: lightblue;width: 12.5%"></span>
+            </div>
+            <div class="row w-75 mt-4 mx-auto">
+                <div class="col-6">
+                    <button type="submit" class="btn bg-primary btn-dark w-100">Register</button>
+                </div>
+                <div class="col-6">
+                    <a class="btn bg-success btn-dark w-100" asp-action="Login">Log In</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function () {
+        var fileName = $(this).val().split("\\").pop();
+        $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
+    </script>
+}

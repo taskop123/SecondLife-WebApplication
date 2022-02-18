@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<SecondLife.Domain.Identity.SecondLifeApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    SecondLife.Domain.DomainModels.Product Model = ViewData["Product"] as SecondLife.Domain.DomainModels.Product;
+    SecondLife.Domain.DTO.AddProductToShoppingCartDTO AddToShoppingCartDTO = ViewData["AddToShoppingCart"] as SecondLife.Domain.DTO.AddProductToShoppingCartDTO;
+}
+
+<h1>Details</h1>
+
+
+<div class="container bootdey mt-5">
+    <div class="col-md-12">
+        <section class="panel">
+            <div class="panel-body">
+                <div class="col-6 text-center float-left">
+                    <div class="pro-img-details">
+                        <img src=/images/@Model.ProductImage alt="" style="max-width:300px; max-height:300px;">
+                    </div>
+                </div>
+                <div class="col-6 float-right">
+                    <h2 class="pro-d-title">
+                        <a href="#" class="">
+                            @Model.ProductName
+                        </a>
+                    </h2>
+                    <p>
+                        @Model.ProductDescription
+                    </p>
+                    <div class="product_meta">
+                        <span class="tagged_as"><strong>Seller's Name: </strong><a asp-action="Details" asp-controller="Account" asp-route-id="@Model.Owner.Email">@Model.Owner.Name @Model.Owner.Surname</a></span> <br />
+                        <span class="tagged_as"><strong>Phone Number:</strong> @Model.Owner.PhoneNumber</span> <br />
+                        <span class="tagged_as"><strong>Email Address:</strong> @Model.Owner.Email </span> <br />
+                        <span class="posted_in"> <strong>Category:</strong> @Model.Category</span> <br />
+                        <span class="tagged_as"><strong>Gender:</strong> @Model.Gender</span> <br />
+                        <span class="tagged_as"><strong>Size:</strong> @Model.Size</span> <br />
+                        <span class="tagged_as"><strong>Quantity:</strong> @Model.Quantity</span>
+                    </div>
+                    <div class="m-bot15"> <strong>Price : </strong> <span class="pro-price">$@Model.Price.00</span></div>
+                    @if (User.Identity.Name != Model.Owner.Email && SignInManager.IsSignedIn(User))
+                    {
+                        @if (Model.Quantity <= 0)
+                        {
+                            <a asp-action="AddProductToShoppingCart" asp-controller="Products" asp-route-id="@Model.Id" class="btn btn-danger disabled">Out of stock!</a>
+                        }
+                        else
+                        {
+                            <a asp-action="AddProductToShoppingCart" asp-controller="Products" asp-route-id="@Model.Id" class="btn btn-primary">Add to shopping cart</a>
+
+                        }
+                    }
+                    <div class="row">
+                        @if (User.Identity.Name == Model.Owner.Email)
+                        {
+                            <div class="col-6">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary w-75 mx-auto"><i class="fa fa-edit"></i></a>
+                            </div>
+                        }
+                        <div class="col-12">
+                            <a asp-action="Index">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

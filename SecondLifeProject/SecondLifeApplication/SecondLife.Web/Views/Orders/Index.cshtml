@@ -1,0 +1,68 @@
+﻿@model List<SecondLife.Domain.DomainModels.Order>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mb-5">
+    @if (Model.ToList().Count < 1)
+    {
+        <div class="row">
+            <div class="col-12">
+                <h3 class="display-3">No orders made yet!</h3>
+            </div>
+        </div>
+    }
+    @foreach (var order in Model)
+    {
+        <div class="container my-3" style="background-color: lightgray;">
+                <div class="row pl-5">
+                    <h3 >Order Id:<b> @order.Id</b></h3> <br />
+                </div>
+                <div class="row pl-5">
+                    <a class="btn btn-success" asp-action="CreateInvoice" asp-route-id="@order.Id">Create invoice</a>
+                </div>
+            <div class="row pl-5">
+                @foreach (var product in order.Products)
+                {
+                    <div class="col-4 h-100 w-100">
+                        <div class="pl-0 py-3">
+                            <div class="card">
+                                <img class="card-img-top" src="/images/@product.Product.ProductImage" alt="Movie Image">
+                                <div class="card-body">
+                                    <h4 class="card-title text-center">@product.Product.ProductName</h4>
+                                    <div class="row">
+                                        <div class="col-6 text-right" style="margin-right:-20px;">
+                                            <p><b>Owner: </b></p>
+                                        </div>
+                                        <div class="col-6 text-left">
+                                            <p class="card-text">@product.Product.Owner.Name @product.Product.Owner.Surname</p>
+                                        </div>
+                                        <div class="col-6 text-right" style="margin-right:-20px;">
+                                            <p><b>Sold to: </b></p>
+                                        </div>
+                                        <div class="col-6 text-left">
+                                            <p class="card-text">@product.Order.User.Name @product.Order.User.Surname</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 text-right" style="margin-right:-20px;">
+                                            <p><b>Description: </b></p>
+                                        </div>
+                                        <div class="col-6 text-left">
+                                            <p class="card-text">@product.Product.ProductDescription</p>
+                                        </div>
+                                    </div>
+                                    <h6>Price:<b> $@product.Product.Price</b></h6>
+                                    <h6>Quantity:<b> @product.Quantity</b></h6>
+                                    <h6>Date of transaction:<b> @order.TransactionTime</b></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

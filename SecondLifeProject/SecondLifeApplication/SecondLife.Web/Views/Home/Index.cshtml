@@ -1,0 +1,55 @@
+﻿@model List<SecondLife.Domain.DomainModels.Product>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<main role="main" class="mb-5">
+
+    <section class="jumbotron text-center">
+        <div class="container">
+            <h1 class="jumbotron-heading"><img src="~/logo.jpg" /></h1>
+            <h1 class="jumbotron-heading">Second Life</h1>
+            <p class="lead text-muted">Bring life to used clothes.</p>
+            <p>
+                <a asp-action="Index" asp-controller="Products" class="btn btn-primary my-2">Find your clothes</a>
+            </p>
+        </div>
+    </section>
+
+    <div class="album py-5 bg-light">
+        <div class="container">
+
+            @if (Model.Count < 1)
+            {
+                <div class="jumbotron">
+                    <h3>Currently we don't have any items for selling, please check again later!</h3>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var product in Model)
+                    {
+                        <div class="col-md-4">
+                            <div class="card mb-4 box-shadow h-100 w-100">
+                                <img class="card-img-top" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="/images/@product.ProductImage" data-holder-rendered="true">
+                                <div class="card-body">
+                                    <h1 class="card-title">@product.ProductName</h1>
+                                    <p class="card-text">@product.ProductDescription</p>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="d-flex justify-content-center w-100 h-100">
+                                        <div class="btn-group">
+                                            <a asp-action="Details" asp-controller="Products" asp-route-id="@product.Id" class="btn btn-primary">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+
+</main>

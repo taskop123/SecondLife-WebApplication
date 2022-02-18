@@ -1,0 +1,58 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<SecondLife.Domain.Identity.SecondLifeApplicationUser> SignInManager
+@inject UserManager<SecondLife.Domain.Identity.SecondLifeApplicationUser> UserManager
+
+<style>
+    .fa-stack[data-count]:after {
+        position: absolute;
+        right: 0%;
+        top: 0%;
+        content: attr(data-count);
+        font-size: 40%;
+        padding: .6em;
+        border-radius: 999px;
+        line-height: .75em;
+        color: white;
+        color: black;
+        text-align: center;
+        min-width: 2em;
+        font-weight: bold;
+        background: white;
+        border-style: solid;
+    }
+
+    .fa-circle {
+        color: black;
+    }
+
+</style>
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    { 
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="Index" asp-controller="ShoppingCart">
+                <span style="font-size:20px;" class="fa-stack fa-1x has-badge" data-count="@ViewData["NumberOfItems"]">
+                    <i class="fa fa-shopping-cart fa-stack-1x"></i>
+                </span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="Details" asp-controller="Account" asp-route-id="@User.Identity.Name">My Details</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+        </li>
+    }
+</ul>

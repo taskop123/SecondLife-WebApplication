@@ -1,0 +1,193 @@
+﻿@model SecondLife.Domain.DTO.ShoppingCartDTO
+@using Microsoft.Extensions.Options
+@inject IOptions<SecondLife.Domain.StripeSettings> Stripe
+
+@{
+    bool isThereAnResponse = false;
+    string[] answer = new string[0];
+    string response = "";
+
+    if (TempData["ResponseToOrder"] != null)
+    {
+        response = TempData["ResponseToOrder"] as string;
+        answer = response.Split("|");
+        isThereAnResponse = true;
+    }
+}
+<style>
+    @@media (min-width: 1025px) {
+        .h-custom {
+            height: 100vh !important;
+        }
+    }
+</style>
+
+<section class="h-100">
+    <div class="container py-5 h-100">
+        @if (isThereAnResponse)
+        {
+            if (answer[0] == "Successfull")
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>Success!</strong> @answer[1]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            else if (answer[0] == "Warning")
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Warning!</strong> @answer[1]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+            else if (answer[0] == "Error")
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>Error!</strong> @answer[1]
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+        }
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card" style="background-color: #eee;">
+                    <div class="card-body p-4">
+
+                        <div class="row">
+
+                            <div class="col-lg-7">
+                                <h5 class="mb-3">
+                                    <a asp-action="Index" asp-controller="Products" class="text-body">
+                                        <i class="fas fa-long-arrow-alt-left me-2"></i> Continue shopping
+                                    </a>
+                                </h5>
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1">Shopping cart</p>
+                                        <p class="mb-0">You have <strong>@Model.ProductsInShoppingCart.Count</strong> items in your cart</p>
+                                    </div>
+                                    
+                                </div>
+                                @foreach (var product in Model.ProductsInShoppingCart)
+                                {
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <div>
+                                                        <img src=/images/@product.Product.ProductImage
+                                                             class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <h5>@product.Product.ProductName</h5>
+                                                        <p class="small mb-0">@product.Product.ProductDescription</p>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <div style="width: 50px;">
+                                                        <a asp-action="RemoveOneQuantity" asp-route-shoppingCartId="@product.ShoppingCartId" asp-route-productId="@product.ProductId"><i class="text-danger fa fa-minus-square"></i></a> 
+                                                        <h5 class="my-auto mx-auto">@product.Quantity</h5>
+                                                        <a asp-action="AddOneMoreQuantity" asp-route-shoppingCartId="@product.ShoppingCartId" asp-route-productId="@product.ProductId"><i class="text-success fa fa-plus-square"></i></a>
+                                                    </div>
+                                                    <div style="width: 80px;">
+                                                        <h5 class="mb-0">$@product.Product.Price.00</h5>
+                                                    </div>
+                                                    <a asp-action="DeleteTicketFromShoppingCart" asp-route-ticketId="@product.ProductId" style="color: #cecece;"><i class="fas fa-trash-alt" style="color:red;"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+                            @if (Model.ProductsInShoppingCart.Count > 0)
+                            {
+                                <div class="col-lg-5">
+
+                                    <div class="card bg-primary text-white rounded-3">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                                <h5 class="mb-0">My Details</h5>
+                                                <img src="/images/@ViewData["UserImage"]"
+                                                     class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
+                                            </div>
+
+                                            <p class="small mb-2">Accepted Card type</p>
+                                            <a href="#!" type="submit" class="text-white">
+                                                <i class="fab fa-cc-mastercard fa-2x me-2"></i>
+                                            </a>
+                                            <a href="#!" type="submit" class="text-white">
+                                                <i class="fab fa-cc-visa fa-2x me-2"></i>
+                                            </a>
+                                            <a href="#!" type="submit" class="text-white">
+                                                <i class="fab fa-cc-amex fa-2x me-2"></i>
+                                            </a>
+                                            <a href="#!" type="submit" class="text-white"><i class="fab fa-cc-paypal fa-2x"></i></a>
+
+                                            <hr class="my-4">
+
+                                            <div class="form-outline form-white mb-4">
+                                                <h3>@ViewData["UserName"] @ViewData["UserLastName"]</h3>
+                                                <h4>@ViewData["UserAddress"]</h4>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between">
+                                                <p class="mb-2">Subtotal</p>
+                                                <p class="mb-2">$@Model.TotalPrice.00</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between">
+                                                <p class="mb-2">Shipping(Constant)</p>
+                                                <p class="mb-2">$10.00</p>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between mb-4">
+                                                <p class="mb-2">Total(Incl. taxes)</p>
+                                                <p class="mb-2">$@(Model.TotalPrice + 10.00).00</p>
+                                            </div>
+                                            <div class="text-center">
+
+                                                @if (Model.TotalPrice != 0)
+                                                {
+                                                    <form asp-controller="ShoppingCart" asp-action="PayOrder" method="post">
+                                                        <article>
+                                                            <script src="https://checkout.stripe.com/checkout.js"
+                                                                    class="stripe-button"
+                                                                    data-key="@Stripe.Value.PublishableKey"
+                                                                    data-amount="@(Convert.ToInt32(Model.TotalPrice) * 100 + 1000) "
+                                                                    data-locale="auto"
+                                                                    data-description="SecondLife Application Payment"
+                                                                    data-label="Pay $@(Model.TotalPrice + 10).00">
+                                                            </script>
+                                                        </article>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        $('.alert').alert()
+    </script>
+}
